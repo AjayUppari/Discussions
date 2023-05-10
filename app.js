@@ -147,17 +147,18 @@ app.get("/user/following/", authenticateToken, async (request, response) => {
   WHERE username = '${username}';`;
   const { user_id } = await db.get(getUserId);
 
-  const getFollowingUsers = `
-  SELECT user.username
-  FROM user
-  INNER JOIN follower ON user.user_id = follower.following_user_id
-  WHERE follower.follower_user_id = ${user_id};`;
+  const tweetsQuery = `
+  SELECT
+  name
+  FROM follower INNER JOIN user on user.user_id = follower.follower_user_id
+  WHERE follower.following_user_id = ${user_id};`;
 
-  const followingUsers = await db.all(getFollowingUsers);
+  const followingUsers = await db.all(tweetsQuery);
+  console.log(followingUsers);
   response.send(
     followingUsers.map((eachFollower) => {
       return {
-        name: eachFollower.username,
+        name: eachFollower.name,
       };
     })
   );
