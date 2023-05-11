@@ -154,7 +154,6 @@ app.get("/user/following/", authenticateToken, async (request, response) => {
   WHERE follower.following_user_id = ${user_id};`;
 
   const followingUsers = await db.all(tweetsQuery);
-  console.log(followingUsers);
   response.send(
     followingUsers.map((eachFollower) => {
       return {
